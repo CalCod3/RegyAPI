@@ -34,7 +34,6 @@ class Athlete(BaseModel):
 
 class Box(BaseModel):
     name: str
-    athletes: list[Athlete] = []
 
     class Config:
         orm_mode = True

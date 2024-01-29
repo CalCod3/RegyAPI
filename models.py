@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import ClassVar, List
 from database import Base
-from sqlalchemy import Boolean, Column, ForeignKey, String
+from sqlalchemy import Boolean, Column, Date, ForeignKey, String, Time
 from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -12,7 +12,6 @@ class User(Base):
 
     id: Mapped[int] = Column(Integer, primary_key=True)
     box_id: Mapped[int] = Column(Integer, ForeignKey("boxes.id"))
-    box: Mapped[str] = relationship("Box", back_populates="members")
     first_name: Mapped[str] = Column(String)
     last_name: Mapped[str] = Column(String)
     email: Mapped[str] = Column(String, unique=True, index=True)
@@ -25,6 +24,13 @@ class Box(Base):
 
     id: Mapped[int] = Column(Integer, primary_key=True)
     name: Mapped[str] = Column(String)
-    members: Mapped[List["User"]] = relationship("User", back_populates="box")
 
+
+class ClassRoom(Base):
+    __tablename__ = "classes"
+
+    id: Mapped[int] = Column(Integer, primary_key=True)
+    name: Mapped[str] = Column(String)
+    date: Mapped[str] = Column(Date)
+    time: Mapped[str] = Column(Time)
 
