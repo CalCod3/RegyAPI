@@ -34,3 +34,11 @@ class ClassRoom(Base):
     date: Mapped[str] = Column(Date)
     time: Mapped[str] = Column(Time)
 
+class Workout(Base):
+    __tablename__ = "workouts"
+
+    id: Mapped[int] = Column(Integer, primary_key=True)
+    name: Mapped[str] = Column(String)
+    date: Mapped[str] = Column(Date)
+    time: Mapped[str] = Column(Time)
+

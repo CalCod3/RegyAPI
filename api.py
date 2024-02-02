@@ -27,6 +27,7 @@ class Athlete(BaseModel):
     first_name: str
     last_name: str
     box_id: int
+    email: EmailStr
     is_staff: bool = False
 
     class Config:
@@ -41,8 +42,21 @@ class Box(BaseModel):
 
 @app.get("/api/athletes")
 async def get_athletes(db: db_dependency):
-    return db.query(models.User).filter(models.User.is_staff == False)
+    query = db.query(models.User).all()
+    print(query)
+    return query
 
+@app.get("/api/athletes/{athlete_id}")
+async def get_athlete_by_id(athlete_id: int, db: db_dependency):
+    athlete_model = db.query(models.User).filter(models.User.id == athlete_id).first()
+
+    if athlete_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Athlete with ID {athlete_id} Does not exist"
+        )
+    
+    return athlete_model
 
 @app.put("/api/athletes/{athlete_id}")
 async def update_athlete(athlete: Athlete, athlete_id: int, db: db_dependency):
@@ -54,7 +68,8 @@ async def update_athlete(athlete: Athlete, athlete_id: int, db: db_dependency):
             detail= f"Athlete with ID {athlete_id} Does not exist"
         )
     
-    athlete_model.username = athlete.username  # type: ignore
+    athlete_model.first_name = athlete.first_name  # type: ignore
+    athlete_model.last_name = athlete.last_name
     athlete_model.email = athlete.email  # type: ignore
 
     db.add(athlete_model)
@@ -102,8 +117,7 @@ async def update_box(box: Box, box_id: int, db: db_dependency):
             detail= f"Box with ID {box_id} Does not exist"
         )
     
-    box_model.name = athlete.name  # type: ignore
-    box_model.email = athlete.email  # type: ignore
+    box_model.name = box.name  # type: ignore
 
     db.add(box_model)
     db.commit()
