@@ -39,6 +39,9 @@ class Box(BaseModel):
     class Config:
         orm_mode = True
 
+class ClassRoom(BaseModel):
+    date: str
+
 
 @app.get("/api/athletes")
 async def get_athletes(db: db_dependency):
@@ -135,6 +138,42 @@ async def delete_box(box_id: int, db: db_dependency):
         )
     
     db.query(models.Box).filter(models.Box.id == box_id).delete()
+
+    db.commit()
+
+@app.get("/api/classes")
+async def get_classes(db: db_dependency):
+    return db.query(models.ClassRoom).all()
+    
+@app.get("/api/attendance/{user_id}")
+async def get_attendance(user_id: int, db: db_dependency):
+    query = db.query(models.User).filter(models.User.id == user_id)
+    return query.attendances
+    
+
+@app.post("/api/attendance/new")
+async def create_attendance(classroom: ClassRoom, db: db_dependency):
+    class_model = models.Attendance()
+
+    class_model.date = classroom.date  # type: ignore
+
+    db.add(class_model)
+    db.commit()
+    return classroom
+
+
+@app.delete("/api/attendance/{user_id}")
+async def delete_attendance(user_id: int, db: db_dependency):
+
+    class_model = db.query(models.Attendance).filter(models.Attendance.user_id == user_id).first()
+
+    if class_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Attendance for user with ID {user_id} Does not exist"
+        )
+    
+    db.query(models.Attendance).filter(models.Attendance.user_id == user_id).delete()
 
     db.commit()
 

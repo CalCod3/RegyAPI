@@ -17,6 +17,17 @@ class User(Base):
     email: Mapped[str] = Column(String, unique=True, index=True)
     password_hash: Mapped[str] = Column(String)
     is_staff: Mapped[bool] = Column(Boolean, default=False)
+    attendances = relationship("Attendance", back_populates="owner")
+
+class Attendance(Base):
+    __tablename__ = "attendance"
+
+    id = Column(Integer, primary_key=True, index=True)
+    date = Column(Date, unique=True, index=True)
+    attendees_count = Column(Integer, default=0)
+    user_id = Column(Integer, ForeignKey('users.id'))
+
+    owner = relationship("User", back_populates="attendances")
 
 
 class Box(Base):
@@ -25,14 +36,6 @@ class Box(Base):
     id: Mapped[int] = Column(Integer, primary_key=True)
     name: Mapped[str] = Column(String)
 
-
-class ClassRoom(Base):
-    __tablename__ = "classes"
-
-    id: Mapped[int] = Column(Integer, primary_key=True)
-    name: Mapped[str] = Column(String)
-    date: Mapped[str] = Column(Date)
-    time: Mapped[str] = Column(Time)
 
 class Workout(Base):
     __tablename__ = "workouts"
