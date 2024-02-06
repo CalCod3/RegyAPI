@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import ClassVar, List
-from database import Base
+from db.database import Base
 from sqlalchemy import Boolean, Column, Date, ForeignKey, String, Time
 from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped

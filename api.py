@@ -3,8 +3,8 @@ from uuid import UUID
 from fastapi import FastAPI, Depends, HTTPException
 import auth
 from pydantic import BaseModel, EmailStr, Field
-import models
-from database import Base, SessionLocal, engine
+import db.models as models
+from db.database import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
 
 app = FastAPI()

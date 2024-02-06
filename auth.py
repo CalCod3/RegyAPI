@@ -6,9 +6,9 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from typing import Annotated
 from starlette import status
-from database import Base, SessionLocal, engine
+from db.database import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
-from models import User, Box
+from db.models import User, Box
 import os
 from dotenv import load_dotenv
 
