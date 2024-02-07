@@ -46,3 +46,19 @@ class Workout(Base):
     date: Mapped[str] = Column(Date)
     time: Mapped[str] = Column(Time)
 
+class News(Base):
+    __tablename__ = "news"
+
+
+    id: Mapped[int] = Column(Integer, primary_key=True)
+    title: Mapped[str] = Column(String)
+    body: Mapped[str] = Column(String)
+    date: Mapped[str] = Column(Date)
+
+class Event(Base):
+    __tablename__ = "events"
+
+    id: Mapped[int] = Column(Integer, primary_key=True)
+    name: Mapped[str] = Column(String)
+    description: Mapped[str] = Column(String)
+    date: Mapped[str] = Column(Date)

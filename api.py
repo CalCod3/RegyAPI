@@ -48,6 +48,16 @@ class Workout(BaseModel):
     date: str
     time: str
 
+class News(BaseModel):
+    title: str
+    body: str
+    date: str
+
+class Event(BaseModel):
+    name: str
+    description: str
+    date: str
+
 @app.get("/api/athletes")
 async def get_athletes(db: db_dependency):
     query = db.query(models.User).all()
