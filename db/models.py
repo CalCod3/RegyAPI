@@ -42,6 +42,7 @@ class Workout(Base):
 
     id: Mapped[int] = Column(Integer, primary_key=True)
     name: Mapped[str] = Column(String)
+    type: Mapped[str] = Column(String)
     date: Mapped[str] = Column(Date)
     time: Mapped[str] = Column(Time)
 

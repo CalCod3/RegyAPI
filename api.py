@@ -42,6 +42,11 @@ class Box(BaseModel):
 class ClassRoom(BaseModel):
     date: str
 
+class Workout(BaseModel):
+    name: str
+    type: str
+    date: str
+    time: str
 
 @app.get("/api/athletes")
 async def get_athletes(db: db_dependency):
@@ -177,3 +182,76 @@ async def delete_attendance(user_id: int, db: db_dependency):
 
     db.commit()
 
+
+@app.get("/api/workouts/{workout_id}")
+async def get_workout_by_id(workout_id: int, db: db_dependency):
+
+    workout_model = db.query(models.Workout).filter(models.Workout.id == workout_id).first()
+
+    if workout_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Workout with ID {workout_id} Does not exist"
+        )
+    
+    return workout_model
+
+@app.get("/api/workouts/{workout_type}")
+async def get_workout_by_type(workout_type: str, db: db_dependency):
+
+    workout_model = db.query(models.Workout).filter(models.Workout.type == workout_type).first()
+
+    if workout_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Workout of type {workout_type} Does not exist"
+        )
+    
+    return workout_model
+
+@app.post("/api/workouts/new")
+async def create_workout(workout: Workout, db: db_dependency):
+    workout_model = models.Workout()
+
+    workout_model.name = workout.name
+    workout_model.type = workout.type
+    workout_model.date = workout.date
+    workout_model.time = workout.time 
+
+    db.add(workout_model)
+    db.commit()
+    return workout
+
+@app.put("/api/workouts/{workout_id}")
+async def update_workout(workout: Workout, workout_id: int, db: db_dependency):
+    workout_model = db.query(models.Workout).filter(models.Workout.id == workout_id).first()
+
+    if workout_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Workout with ID {workout_id} Does not exist"
+        )
+    
+    workout_model.name = workout.name
+    workout_model.type = workout.type
+    workout_model.date = workout.date
+    workout_model.time = workout.time 
+
+    db.add(workout_model)
+    db.commit()
+    return workout
+
+@app.delete("/api/workouts/{workout_id}")
+async def delete_workout(workout_id: int, db: db_dependency):
+
+    workout_model = db.query(models.Workout).filter(models.Workout.id == workout_id).first()
+
+    if workout_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Workout with ID {workout_id} Does not exist"
+        )
+    
+    db.query(models.Workout).filter(models.Workout.id == workout_id).delete()
+
+    db.commit()
