@@ -1,5 +1,5 @@
 import json
-
+from conf_test import client
 
 def test_create_user(client):
     data = {"first_name":"test", "last_name":"user","email":"testuser@nofoobar.com","password":"testing"}
