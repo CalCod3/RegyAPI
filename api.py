@@ -265,3 +265,119 @@ async def delete_workout(workout_id: int, db: db_dependency):
     db.query(models.Workout).filter(models.Workout.id == workout_id).delete()
 
     db.commit()
+
+@app.get("/api/news/{news_id}")
+async def get_news_by_id(news_id: int, db: db_dependency):
+
+    news_model = db.query(models.News).filter(models.News.id == news_id).first()
+
+    if news_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"News of ID {news_id} Does not exist"
+        )
+    
+    return news_model
+
+@app.post("/api/news/new")
+async def create_news(news: News, db: db_dependency):
+    news_model = models.News()
+
+    news_model.title = news.title
+    news_model.body = news.body
+    news_model.date = news.date
+    
+    db.add(news_model)
+    db.commit()
+    return news
+
+@app.put("/api/workouts/{workout_id}")
+async def update_news(news: News, news_id: int, db: db_dependency):
+    news_model = db.query(models.News).filter(models.News.id == news_id).first()
+
+    if news_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"News with ID {news_id} Does not exist"
+        )
+    
+    news_model.title = news.title
+    news_model.body = news.body
+    news_model.date = news.date
+
+    db.add(news_model)
+    db.commit()
+    return news
+
+@app.delete("/api/news/{workout_id}")
+async def delete_news(news_id: int, db: db_dependency):
+
+    news_model = db.query(models.News).filter(models.News.id == news_id).first()
+
+    if news_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"News with ID {news_id} Does not exist"
+        )
+    
+    db.query(models.News).filter(models.News.id == news_id).delete()
+
+    db.commit()
+
+@app.get("/api/events/{event_id}")
+async def get_event_by_id(event_id: int, db: db_dependency):
+
+    event_model = db.query(models.Event).filter(models.Event.id == event_id).first()
+
+    if event_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Event of ID {event_id} Does not exist"
+        )
+    
+    return event_model
+
+@app.post("/api/events/new")
+async def create_event(event: Event, db: db_dependency):
+    event_model = models.Event()
+
+    event_model.name = event.name
+    event_model.description = event.description
+    event_model.date = event.date
+
+    db.add(event_model)
+    db.commit()
+    return event
+
+@app.put("/api/events/{event_id}")
+async def update_event(event: Event, event_id: int, db: db_dependency):
+    event_model = db.query(models.Event).filter(models.Event.id == event_id).first()
+
+    if event_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Event with ID {event_id} Does not exist"
+        )
+    
+    event_model.name = event.name
+    event_model.description = event.description
+    event_model.date = event.date
+
+    db.add(event_model)
+    db.commit()
+    return event
+
+@app.delete("/api/events/{event_id}")
+async def delete_event(event_id: int, db: db_dependency):
+
+    event_model = db.query(models.Event).filter(models.Event.id == event_id).first()
+
+    if event_model is None:
+        raise HTTPException(
+            status_code= 404,
+            detail= f"Event with ID {event_id} Does not exist"
+        )
+    
+    db.query(models.Event).filter(models.Event.id == event_id).delete()
+
+    db.commit()
