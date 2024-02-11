@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Annotated
 from uuid import UUID
 from fastapi import FastAPI, Depends, HTTPException
@@ -39,8 +40,9 @@ class Box(BaseModel):
     class Config:
         orm_mode = True
 
-class ClassRoom(BaseModel):
-    date: str
+class Attendance(BaseModel):
+    date: date
+    owner_id: int
 
 class Workout(BaseModel):
     name: str
@@ -163,14 +165,15 @@ async def get_classes(db: db_dependency):
 @app.get("/api/attendance/{user_id}")
 async def get_attendance(user_id: int, db: db_dependency):
     query = db.query(models.User).filter(models.User.id == user_id)
-    return query.attendances
+    return query
     
 
 @app.post("/api/attendance/new")
-async def create_attendance(classroom: ClassRoom, db: db_dependency):
+async def create_attendance(classroom: Attendance, db: db_dependency):
     class_model = models.Attendance()
 
     class_model.date = classroom.date  # type: ignore
+    class_model.owner_id = classroom.owner_id
 
     db.add(class_model)
     db.commit()

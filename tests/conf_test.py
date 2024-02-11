@@ -30,6 +30,16 @@ engine = create_engine(
 # Use connect_args parameter only with sqlite
 SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+@pytest.fixture(scope="function")
+def app() -> Generator[FastAPI, Any, None]:
+    """
+    Create a fresh database on each test case.
+    """
+    Base.metadata.create_all(engine)  # Create the tables.
+    _app = start_application()
+    yield _app
+    Base.metadata.drop_all(engine)
+
 
 @pytest.fixture(scope="function")
 def db_session(app: FastAPI) -> Generator[SessionTesting, Any, None]:
@@ -61,12 +71,3 @@ def client(
     with TestClient(app) as client:
         yield client
 
-@pytest.fixture(scope="function")
-def app() -> Generator[FastAPI, Any, None]:
-    """
-    Create a fresh database on each test case.
-    """
-    Base.metadata.create_all(engine)  # Create the tables.
-    _app = start_application()
-    yield _app
-    Base.metadata.drop_all(engine)
