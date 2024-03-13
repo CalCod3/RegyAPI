@@ -1,9 +1,9 @@
 from datetime import date
 from typing import Annotated
 from uuid import UUID
+from db.schemas import Athlete, Attendance, Box, Event, News, Workout
 from fastapi import FastAPI, Depends, HTTPException
 import auth
-from pydantic import BaseModel, EmailStr, Field
 import db.models as models
 from db.database import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
@@ -23,42 +23,6 @@ def get_db():
 
         
 db_dependency = Annotated[Session,  Depends(get_db)]
-
-class Athlete(BaseModel):
-    first_name: str
-    last_name: str
-    box_id: int
-    email: EmailStr
-    is_staff: bool = False
-
-    class Config:
-        orm_mode = True
-
-class Box(BaseModel):
-    name: str
-
-    class Config:
-        orm_mode = True
-
-class Attendance(BaseModel):
-    date: date
-    owner_id: int
-
-class Workout(BaseModel):
-    name: str
-    type: str
-    date: str
-    time: str
-
-class News(BaseModel):
-    title: str
-    body: str
-    date: str
-
-class Event(BaseModel):
-    name: str
-    description: str
-    date: str
 
 @app.get("/api/athletes")
 async def get_athletes(db: db_dependency):
@@ -294,7 +258,7 @@ async def create_news(news: News, db: db_dependency):
     db.commit()
     return news
 
-@app.put("/api/workouts/{workout_id}")
+@app.put("/api/workouts/{news_id}")
 async def update_news(news: News, news_id: int, db: db_dependency):
     news_model = db.query(models.News).filter(models.News.id == news_id).first()
 
@@ -312,7 +276,7 @@ async def update_news(news: News, news_id: int, db: db_dependency):
     db.commit()
     return news
 
-@app.delete("/api/news/{workout_id}")
+@app.delete("/api/news/{news_id}")
 async def delete_news(news_id: int, db: db_dependency):
 
     news_model = db.query(models.News).filter(models.News.id == news_id).first()

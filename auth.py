@@ -93,7 +93,7 @@ def create_access_token(email: str, id: int, expires_delta: timedelta):
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
-        payload: jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload: jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]) # type: ignore
         email: str = payload.get('sub')
         id: int = payload.get('id')
 
