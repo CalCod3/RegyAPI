@@ -5,7 +5,7 @@ from db.schemas import Athlete, Attendance, Box, Event, News, Workout
 from fastapi import FastAPI, Depends, HTTPException
 import auth
 import db.models as models
-from db.database import Base, SessionLocal, engine
+from db.database import Base, SessionLocal, engine, get_db
 from sqlalchemy.orm import Session
 
 app = FastAPI()
@@ -13,15 +13,6 @@ app.include_router(auth.router)
 
 models.Base.metadata.create_all(bind = engine)
 
-def get_db():
-
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
-
-        
 db_dependency = Annotated[Session,  Depends(get_db)]
 
 @app.get("/api/athletes")

@@ -37,3 +37,17 @@ class Event(BaseModel):
     name: str
     description: str
     date: str
+
+class Box(BaseModel):
+    name: str
+
+class CreateUserRequest(BaseModel):
+    first_name: str
+    last_name: str
+    box_id: int
+    email: EmailStr
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
